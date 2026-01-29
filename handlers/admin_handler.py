@@ -302,7 +302,7 @@ async def restart_command(app: Client, message: Message):
         logger.error(f"Error in restart_command: {e}")
 
 # Handle text input for admin actions
-@Client.on_message(filters.text & ~filters.command, group=5)
+@Client.on_message(filters.text & filters.private, group=5)
 async def handle_admin_input(app: Client, message: Message):
     """Handle admin action text input"""
     try:

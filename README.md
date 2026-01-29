@@ -26,7 +26,7 @@ A powerful Telegram bot for renaming video files with custom formats and adding 
 
 ## Project Structure
 
-```
+\`\`\`
 file-rename-bot/
 ├── main.py                 # Main bot entry point
 ├── config.py              # Configuration and constants
@@ -47,7 +47,7 @@ file-rename-bot/
     ├── metadata_handler.py # Metadata and prefix/suffix
     ├── user_handler.py    # User commands
     └── admin_handler.py   # Admin commands
-```
+\`\`\`
 
 ## Installation
 
@@ -76,7 +76,7 @@ file-rename-bot/
 
 ### Step 3: Clone and Setup
 
-```bash
+\`\`\`bash
 # Clone the repository
 git clone https://github.com/yourusername/file-rename-bot.git
 cd file-rename-bot
@@ -98,13 +98,13 @@ cp .env.example .env
 
 # Edit .env with your credentials
 nano .env  # or use your preferred editor
-```
+\`\`\`
 
 ### Step 3: Configure Environment Variables
 
 Create a `.env` file in the root directory with the following variables:
 
-```env
+\`\`\`env
 # Telegram Configuration
 API_ID=your_api_id
 API_HASH=your_api_hash
@@ -121,7 +121,7 @@ LOG_CHANNEL=-1001234567890
 # Optional Settings
 FORCE_SUBS=channel_username
 START_PIC=https://example.com/image.jpg
-```
+\`\`\`
 
 ### Step 4: Get Your User ID
 
@@ -142,16 +142,16 @@ START_PIC=https://example.com/image.jpg
 
 ### Local Development
 
-```bash
+\`\`\`bash
 # Make sure virtual environment is activated
 python main.py
-```
+\`\`\`
 
 The bot will start and display:
-```
+\`\`\`
 Bot started successfully
 Bot name: YourBotName (@yourbotusername)
-```
+\`\`\`
 
 ### Testing Commands
 
@@ -176,7 +176,7 @@ Send these commands to your bot:
 
 ### Deploy to Heroku
 
-```bash
+\`\`\`bash
 # Login to Heroku
 heroku login
 
@@ -193,7 +193,7 @@ heroku config:set LOG_CHANNEL=xxx
 
 # Deploy
 git push heroku main
-```
+\`\`\`
 
 ### Deploy to Railway
 
@@ -271,12 +271,12 @@ When setting a custom rename format, you can use these variables:
 
 ### Example Formats
 
-```
+\`\`\`
 S{season}E{episode} - {title}
 {title} ({quality})
 {title} [{audio}] - {quality}
 S{season}E{episode} {title} {quality}p
-```
+\`\`\`
 
 ## Database Schema
 

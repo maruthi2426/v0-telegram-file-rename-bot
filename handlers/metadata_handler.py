@@ -199,7 +199,7 @@ async def del_suffix_command(app: Client, message: Message):
         logger.error(f"Error in del_suffix_command: {e}")
 
 # Handle text input for metadata
-@Client.on_message(filters.text & ~filters.command, group=3)
+@Client.on_message(filters.text & filters.private, group=3)
 async def handle_metadata_input(app: Client, message: Message):
     """Handle metadata text input"""
     try:
