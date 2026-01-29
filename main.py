@@ -6,10 +6,10 @@ from dotenv import load_dotenv
 from pyrogram import Client
 from pyrogram.types import BotCommand
 
-# Load env
+# Load environment variables
 load_dotenv()
 
-# Logging
+# Logging setup
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s - %(levelname)s - %(message)s",
@@ -17,20 +17,20 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-# Validate env vars
+# Validate environment variables
 required = ["API_ID", "API_HASH", "BOT_TOKEN"]
 missing = [v for v in required if not os.getenv(v)]
 if missing:
     logger.error(f"Missing env vars: {', '.join(missing)}")
     sys.exit(1)
 
-# ✅ PYROGRAM 1.4 SAFE CLIENT
+# ✅ Pyrogram 1.4 SAFE client
 app = Client(
     "FileRenameBot",
     api_id=int(os.getenv("API_ID")),
     api_hash=os.getenv("API_HASH"),
     bot_token=os.getenv("BOT_TOKEN"),
-    in_memory=True        # ⭐ VERY IMPORTANT
+    in_memory=True   # VERY IMPORTANT for cloud
 )
 
 # Import handlers AFTER client creation
@@ -44,9 +44,8 @@ from handlers import (
     metadata_handler
 )
 
-@app.on_start()
-def on_start(client):
-    client.set_bot_commands([
+def set_commands():
+    app.set_bot_commands([
         BotCommand("start", "Start the bot"),
         BotCommand("autorename", "Set auto rename format"),
         BotCommand("showformat", "View rename format"),
@@ -61,11 +60,15 @@ def on_start(client):
         BotCommand("metadata", "Show metadata"),
         BotCommand("ping", "Check bot status"),
     ])
-    me = client.get_me()
-    logger.info(f"🤖 Bot started as {me.first_name} (@{me.username})")
-    logger.info("✅ BOT IS LIVE & STABLE")
 
-# ✅ DO NOT MANAGE LOOP YOURSELF
 if __name__ == "__main__":
     logger.info("🚀 Starting bot using app.run()")
-    app.run()
+
+    # app.run() handles start + idle + stop internally (NO CRASH)
+    with app:
+        set_commands()
+        me = app.get_me()
+        logger.info(f"🤖 Bot started as {me.first_name} (@{me.username})")
+        logger.info("✅ BOT IS LIVE & STABLE")
+
+        app.idle()
