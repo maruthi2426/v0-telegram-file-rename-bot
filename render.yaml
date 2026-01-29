@@ -1,0 +1,26 @@
+services:
+  - type: web
+    name: file-rename-bot
+    env: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: python main.py
+    envVars:
+      - key: API_ID
+        sync: false
+      - key: API_HASH
+        sync: false
+      - key: BOT_TOKEN
+        sync: false
+      - key: DB_URL
+        sync: false
+      - key: DATABASE_NAME
+        value: file_rename_bot
+      - key: OWNER_ID
+        sync: false
+      - key: LOG_CHANNEL
+        sync: false
+      - key: FORCE_SUBS
+        sync: false
+      - key: START_PIC
+        sync: false
