@@ -1,8 +1,7 @@
 import logging
 import os
-import sys
-from dotenv import load_dotenv
 from pyrogram import Client
+from dotenv import load_dotenv
 
 # ---------------- LOAD ENV ----------------
 load_dotenv()
@@ -19,28 +18,27 @@ API_ID = int(os.getenv("API_ID"))
 API_HASH = os.getenv("API_HASH")
 BOT_TOKEN = os.getenv("BOT_TOKEN")
 
-if not API_ID or not API_HASH or not BOT_TOKEN:
-    log.error("❌ Missing API credentials")
-    sys.exit(1)
+if not all([API_ID, API_HASH, BOT_TOKEN]):
+    log.error("❌ Missing API_ID / API_HASH / BOT_TOKEN")
+    exit(1)
 
 # ---------------- CLIENT ----------------
 app = Client(
-    "FileRenameBot",
+    "FileRenameBot",   # session name (STRING ONLY)
     api_id=API_ID,
     api_hash=API_HASH,
     bot_token=BOT_TOKEN
 )
 
-# ---------------- IMPORT ALL HANDLERS ----------------
-from handlers import (
-    start_handler,
-    rename_handler,
-    thumbnail_handler,
-    caption_handler,
-    admin_handler,
-    user_handler,
-    metadata_handler
-)
+# ---------------- IMPORT HANDLERS ----------------
+# IMPORTANT: importing registers handlers
+import handlers.start
+import handlers.rename
+import handlers.thumbnail
+import handlers.caption
+import handlers.admin
+import handlers.user
+import handlers.metadata
 
 # ---------------- MAIN ----------------
 if __name__ == "__main__":
