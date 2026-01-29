@@ -11,37 +11,21 @@ logger = logging.getLogger(__name__)
 
 class Database:
     def __init__(self):
-        # Support both DATABASE_URL and DB_URL for compatibility
-        self.db_url = os.getenv("DATABASE_URL") or os.getenv("DB_URL")
+        self.db_url = os.getenv("DB_URL")
         self.db_name = os.getenv("DATABASE_NAME", "file_rename_bot")
         self.client = None
         self.db = None
         
-        if not self.db_url:
-            logger.error("DATABASE_URL environment variable is not set!")
-            raise ValueError("DATABASE_URL or DB_URL must be set")
-        
     def connect(self):
-        """Connect to MongoDB with retry logic"""
+        """Connect to MongoDB"""
         try:
-            logger.info("Attempting to connect to MongoDB...")
-            self.client = MongoClient(
-                self.db_url,
-                serverSelectionTimeoutMS=5000,
-                connectTimeoutMS=10000
-            )
+            self.client = MongoClient(self.db_url)
             self.db = self.client[self.db_name]
-            
-            # Test the connection
-            logger.info("Testing MongoDB connection with ping...")
             self.client.admin.command('ping')
-            logger.info(f"Connected to MongoDB successfully (Database: {self.db_name})")
+            logger.info("Connected to MongoDB successfully")
             return True
         except ConnectionFailure as e:
-            logger.error(f"MongoDB Connection Failure: {e}")
-            return False
-        except Exception as e:
-            logger.error(f"Error connecting to MongoDB: {type(e).__name__}: {e}")
+            logger.error(f"Failed to connect to MongoDB: {e}")
             return False
     
     def disconnect(self):
