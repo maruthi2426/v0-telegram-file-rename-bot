@@ -2,8 +2,7 @@ import logging
 import os
 import sys
 from dotenv import load_dotenv
-from pyrogram import Client, filters
-from pyrogram.types import Message
+from pyrogram import Client
 
 # ---------------- LOAD ENV ----------------
 load_dotenv()
@@ -32,7 +31,7 @@ app = Client(
     bot_token=BOT_TOKEN
 )
 
-# ---------------- IMPORT HANDLERS ----------------
+# ---------------- IMPORT ALL HANDLERS ----------------
 from handlers import (
     start_handler,
     rename_handler,
@@ -42,11 +41,6 @@ from handlers import (
     user_handler,
     metadata_handler
 )
-
-# ---------------- START HANDLER (TEST) ----------------
-@app.on_message(filters.command("start"))
-async def start_test(_, message: Message):
-    await message.reply_text("✅ Bot is ONLINE & WORKING")
 
 # ---------------- MAIN ----------------
 if __name__ == "__main__":
