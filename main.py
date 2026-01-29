@@ -1,5 +1,6 @@
 import logging
 import os
+import asyncio
 from dotenv import load_dotenv
 from pyrogram import Client, filters
 from pyrogram.types import BotCommand, Message
@@ -28,7 +29,7 @@ app = Client(
     bot_token=BOT_TOKEN
 )
 
-# Import handlers (make sure these files exist in handlers/)
+# Import your handlers
 from handlers import (
     start_handler,
     rename_handler,
@@ -39,17 +40,16 @@ from handlers import (
     metadata_handler
 )
 
-# Example start command handler
+# Example start command
 @app.on_message(filters.command("start"))
 async def start_test(_, message: Message):
     await message.reply_text("✅ Bot is ONLINE & WORKING")
 
-# Async runner to start bot properly
-async def runner():
+async def main():
     # Start the client
     await app.start()
-    
-    # Set bot commands after client started
+
+    # Set bot commands after client has started
     try:
         await app.set_bot_commands([
             BotCommand("start", "Start the bot"),
@@ -58,15 +58,13 @@ async def runner():
     except RPCError as e:
         log.warning(f"⚠️ Failed to set bot commands: {e}")
 
-    # Log bot info
     me = await app.get_me()
     log.info(f"🤖 Bot started as {me.first_name} (@{me.username})")
 
-    # Keep bot running until interrupted
-    await app.idle()
+    # Keep the bot running forever
+    log.info("✅ Bot is now running...")
+    await asyncio.Event().wait()  # <-- Keeps bot alive in Pyrogram v2
 
 if __name__ == "__main__":
     log.info("🚀 Starting bot...")
-
-    import asyncio
-    asyncio.run(runner())
+    asyncio.run(main())
