@@ -1,3 +1,4 @@
+import asyncio
 import logging
 import os
 import sys
@@ -6,7 +7,7 @@ from dotenv import load_dotenv
 from pyrogram import Client, idle
 from pyrogram.types import BotCommand
 
-# Load environment variables
+# Load env
 load_dotenv()
 
 # Logging
@@ -18,22 +19,22 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 # Validate env vars
-required_vars = ["API_ID", "API_HASH", "BOT_TOKEN"]
-missing = [v for v in required_vars if not os.getenv(v)]
-
+required = ["API_ID", "API_HASH", "BOT_TOKEN"]
+missing = [v for v in required if not os.getenv(v)]
 if missing:
-    logger.error(f"❌ Missing environment variables: {', '.join(missing)}")
+    logger.error(f"Missing env vars: {', '.join(missing)}")
     sys.exit(1)
 
-# ✅ CLASSIC PYROGRAM CLIENT (OLDER VERSION SAFE)
+# ✅ ASYNC-SAFE PYROGRAM CLIENT
 app = Client(
     "FileRenameBot",
     api_id=int(os.getenv("API_ID")),
     api_hash=os.getenv("API_HASH"),
-    bot_token=os.getenv("BOT_TOKEN")
+    bot_token=os.getenv("BOT_TOKEN"),
+    workdir="."
 )
 
-# Import handlers AFTER app creation
+# Import handlers AFTER client creation
 from handlers import (
     start_handler,
     rename_handler,
@@ -44,11 +45,7 @@ from handlers import (
     metadata_handler
 )
 
-@app.on_message()
-async def _dummy(_, __):
-    pass
-
-def set_commands():
+async def set_commands():
     commands = [
         BotCommand("start", "Start the bot"),
         BotCommand("autorename", "Set auto rename format"),
@@ -65,27 +62,29 @@ def set_commands():
         BotCommand("ping", "Check bot status"),
         BotCommand("donate", "Support developer"),
     ]
+    await app.set_bot_commands(commands)
 
-    app.set_bot_commands(commands)
-
-if __name__ == "__main__":
+async def main():
     try:
-        logger.info("🚀 Starting bot...")
-        app.start()
+        logger.info("🚀 Starting bot (async mode)...")
+        await app.start()
 
-        set_commands()
+        await set_commands()
 
-        me = app.get_me()
+        me = await app.get_me()
         logger.info(f"🤖 Bot started as {me.first_name} (@{me.username})")
-        logger.info("✅ BOT IS LIVE")
+        logger.info("✅ BOT IS LIVE & STABLE")
         logger.info("=" * 60)
 
-        idle()
+        await idle()
 
     except Exception:
-        logger.error("🔥 Bot crashed", exc_info=True)
-        sys.exit(1)
+        logger.exception("🔥 Fatal runtime error")
 
     finally:
-        app.stop()
-        logger.info("🛑 Bot stopped")
+        if app.is_connected:
+            await app.stop()
+            logger.info("🛑 Bot stopped cleanly")
+
+if __name__ == "__main__":
+    asyncio.run(main())
