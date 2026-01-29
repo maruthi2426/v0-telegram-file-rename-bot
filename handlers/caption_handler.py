@@ -99,7 +99,7 @@ async def del_caption_command(app: Client, message: Message):
         logger.error(f"Error in del_caption_command: {e}")
 
 # Handle text input for caption
-@Client.on_message(filters.text & ~filters.command, group=2)
+@Client.on_message(filters.text & filters.private, group=2)
 async def handle_caption_input(app: Client, message: Message):
     """Handle caption text input"""
     try:
