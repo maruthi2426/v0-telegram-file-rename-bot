@@ -2,6 +2,7 @@ import logging
 import os
 from dotenv import load_dotenv
 from pyrogram import Client, filters, idle
+from pyrogram.storage import MemoryStorage
 from pyrogram.types import Message, BotCommand
 import asyncio
 
@@ -15,13 +16,13 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-# Initialize Pyrogram Client
+# Initialize Pyrogram Client with MemoryStorage for cloud deployment
 app = Client(
     session_name="FileRenameBot",
     api_id=int(os.getenv("API_ID")),
     api_hash=os.getenv("API_HASH"),
     bot_token=os.getenv("BOT_TOKEN"),
-    workdir="sessions"
+    storage=MemoryStorage()
 )
 
 # Import handlers
