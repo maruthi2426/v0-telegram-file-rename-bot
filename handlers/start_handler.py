@@ -2,6 +2,7 @@ import logging
 from pyrogram import Client, filters
 from pyrogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton
 from config import START_MESSAGE, HELP_MESSAGE
+from main import app
 from database import db
 from utils import send_log, is_admin, check_user_ban
 
