@@ -1,10 +1,9 @@
-import asyncio
 import logging
 import os
 import sys
 from dotenv import load_dotenv
 
-from pyrogram import Client, idle
+from pyrogram import Client
 from pyrogram.types import BotCommand
 
 # Load env
@@ -25,13 +24,13 @@ if missing:
     logger.error(f"Missing env vars: {', '.join(missing)}")
     sys.exit(1)
 
-# ✅ ASYNC-SAFE PYROGRAM CLIENT
+# ✅ PYROGRAM 1.4 SAFE CLIENT
 app = Client(
     "FileRenameBot",
     api_id=int(os.getenv("API_ID")),
     api_hash=os.getenv("API_HASH"),
     bot_token=os.getenv("BOT_TOKEN"),
-    workdir="."
+    in_memory=True        # ⭐ VERY IMPORTANT
 )
 
 # Import handlers AFTER client creation
@@ -45,8 +44,9 @@ from handlers import (
     metadata_handler
 )
 
-async def set_commands():
-    commands = [
+@app.on_start()
+def on_start(client):
+    client.set_bot_commands([
         BotCommand("start", "Start the bot"),
         BotCommand("autorename", "Set auto rename format"),
         BotCommand("showformat", "View rename format"),
@@ -60,31 +60,12 @@ async def set_commands():
         BotCommand("setmedia", "Set output file type"),
         BotCommand("metadata", "Show metadata"),
         BotCommand("ping", "Check bot status"),
-        BotCommand("donate", "Support developer"),
-    ]
-    await app.set_bot_commands(commands)
+    ])
+    me = client.get_me()
+    logger.info(f"🤖 Bot started as {me.first_name} (@{me.username})")
+    logger.info("✅ BOT IS LIVE & STABLE")
 
-async def main():
-    try:
-        logger.info("🚀 Starting bot (async mode)...")
-        await app.start()
-
-        await set_commands()
-
-        me = await app.get_me()
-        logger.info(f"🤖 Bot started as {me.first_name} (@{me.username})")
-        logger.info("✅ BOT IS LIVE & STABLE")
-        logger.info("=" * 60)
-
-        await idle()
-
-    except Exception:
-        logger.exception("🔥 Fatal runtime error")
-
-    finally:
-        if app.is_connected:
-            await app.stop()
-            logger.info("🛑 Bot stopped cleanly")
-
+# ✅ DO NOT MANAGE LOOP YOURSELF
 if __name__ == "__main__":
-    asyncio.run(main())
+    logger.info("🚀 Starting bot using app.run()")
+    app.run()
