@@ -1,0 +1,68 @@
+apiVersion: koeyb.sh/v1alpha1
+kind: Service
+metadata:
+  name: telegram-file-rename-bot
+  namespace: default
+  
+spec:
+  # Service definition
+  definition:
+    name: telegram-file-rename-bot
+    
+    # Build configuration
+    build:
+      buildpack:
+        language: python
+        
+    # Run configuration
+    run:
+      command: python main.py
+      workdir: /
+      
+      # Environment variables (set these in Koyeb dashboard)
+      env:
+        - key: API_ID
+          value: ""  # Set in dashboard
+        - key: API_HASH
+          value: ""  # Set in dashboard
+        - key: BOT_TOKEN
+          value: ""  # Set in dashboard
+        - key: DATABASE_URL
+          value: ""  # Set in dashboard
+        - key: OWNER_ID
+          value: ""  # Set in dashboard
+      
+      # Port configuration (Telegram bot doesn't need exposed ports)
+      ports:
+        - name: http
+          port: 8080
+          protocol: HTTP
+      
+      # Resource limits
+      resources:
+        cpu: 250m
+        memory: 512Mi
+      
+      # Health check
+      healthChecks:
+        liveness:
+          initialDelaySeconds: 30
+          periodSeconds: 30
+          timeoutSeconds: 10
+          successThreshold: 1
+          failureThreshold: 3
+          httpGet:
+            path: /health
+            port: 8080
+  
+  # Deployment strategy
+  template:
+    spec:
+      # Auto-scaling
+      autoscaling:
+        enabled: false
+        maxInstances: 1
+        minInstances: 1
+      
+      # Restart policy
+      restartPolicy: Always
