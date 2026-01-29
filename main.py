@@ -11,7 +11,7 @@ from pyrogram.types import BotCommand
 # Load environment variables
 load_dotenv()
 
-# Logging setup
+# Logging configuration
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s - %(levelname)s - %(message)s",
@@ -19,7 +19,7 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-# Required environment variables
+# Validate environment variables
 required_vars = ["API_ID", "API_HASH", "BOT_TOKEN", "DATABASE_URL"]
 missing = [v for v in required_vars if not os.getenv(v)]
 
@@ -27,16 +27,16 @@ if missing:
     logger.error(f"❌ Missing environment variables: {', '.join(missing)}")
     sys.exit(1)
 
-# ✅ CORRECT Pyrogram Client Initialization
+# ✅ CORRECT CLIENT + STORAGE INITIALIZATION
 app = Client(
-    "FileRenameBot",                     # <-- NAME MUST BE POSITIONAL
+    "FileRenameBot",                              # Client name (POSITIONAL)
     api_id=int(os.getenv("API_ID")),
     api_hash=os.getenv("API_HASH"),
     bot_token=os.getenv("BOT_TOKEN"),
-    storage=MemoryStorage()              # <-- NO name HERE
+    storage=MemoryStorage("FileRenameBot")        # Storage name REQUIRED
 )
 
-# Import handlers AFTER app is created
+# Import handlers AFTER app creation
 from handlers import (
     start_handler,
     rename_handler,
@@ -74,7 +74,7 @@ async def set_commands():
     ]
 
     await app.set_bot_commands(commands)
-    logger.info("✅ Bot commands set")
+    logger.info("✅ Bot commands set successfully")
 
 async def main():
     try:
@@ -85,18 +85,19 @@ async def main():
 
         me = await app.get_me()
         logger.info(f"🤖 Bot started as {me.first_name} (@{me.username})")
-        logger.info("✅ BOT IS LIVE AND RUNNING")
+        logger.info("=" * 60)
+        logger.info("✅ BOT IS LIVE AND READY")
         logger.info("=" * 60)
 
         await idle()
 
-    except Exception as e:
-        logger.error("🔥 Fatal error occurred", exc_info=True)
+    except Exception:
+        logger.error("🔥 Critical startup failure", exc_info=True)
         sys.exit(1)
 
     finally:
         await app.stop()
-        logger.info("🛑 Bot stopped gracefully")
+        logger.info("🛑 Bot stopped cleanly")
 
 if __name__ == "__main__":
     try:
