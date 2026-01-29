@@ -1,40 +1,42 @@
 import logging
 import os
 import sys
-from dotenv import load_dotenv
-from pyrogram import Client, filters, idle
-from pyrogram.storage import MemoryStorage
-from pyrogram.types import Message, BotCommand
 import asyncio
+from dotenv import load_dotenv
+
+from pyrogram import Client, idle
+from pyrogram.storage import MemoryStorage
+from pyrogram.types import BotCommand
 
 # Load environment variables
 load_dotenv()
 
-# Configure logging
+# Logging setup
 logging.basicConfig(
     level=logging.INFO,
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+    format="%(asctime)s - %(levelname)s - %(message)s",
     handlers=[logging.StreamHandler(sys.stdout)]
 )
 logger = logging.getLogger(__name__)
 
-# Validate environment variables
+# Required environment variables
 required_vars = ["API_ID", "API_HASH", "BOT_TOKEN", "DATABASE_URL"]
-missing_vars = [var for var in required_vars if not os.getenv(var)]
-if missing_vars:
-    logger.error(f"Missing environment variables: {', '.join(missing_vars)}")
+missing = [v for v in required_vars if not os.getenv(v)]
+
+if missing:
+    logger.error(f"❌ Missing environment variables: {', '.join(missing)}")
     sys.exit(1)
 
-# Initialize Pyrogram Client with MemoryStorage for cloud deployment
+# ✅ CORRECT Pyrogram Client Initialization
 app = Client(
-    name="FileRenameBot",
+    "FileRenameBot",                     # <-- NAME MUST BE POSITIONAL
     api_id=int(os.getenv("API_ID")),
     api_hash=os.getenv("API_HASH"),
     bot_token=os.getenv("BOT_TOKEN"),
-    storage=MemoryStorage(name="FileRenameBot")
+    storage=MemoryStorage()              # <-- NO name HERE
 )
 
-# Import handlers
+# Import handlers AFTER app is created
 from handlers import (
     start_handler,
     rename_handler,
@@ -46,23 +48,22 @@ from handlers import (
 )
 
 async def set_commands():
-    """Set bot commands for UI"""
     commands = [
         BotCommand("start", "Start the bot"),
         BotCommand("autorename", "Set auto rename format"),
-        BotCommand("showformat", "View your rename format"),
-        BotCommand("tutorial", "Usage guide"),
-        BotCommand("leaderboard", "View leaderboard"),
+        BotCommand("showformat", "View rename format"),
+        BotCommand("tutorial", "How to use"),
+        BotCommand("leaderboard", "Leaderboard"),
         BotCommand("viewthumb", "View thumbnail"),
         BotCommand("delthumb", "Delete thumbnail"),
-        BotCommand("set_caption", "Set custom caption"),
+        BotCommand("set_caption", "Set caption"),
         BotCommand("see_caption", "View caption"),
         BotCommand("del_caption", "Delete caption"),
         BotCommand("setmedia", "Set output file type"),
-        BotCommand("start_sequence", "Start file sequencing"),
-        BotCommand("end_sequence", "End file sequencing"),
-        BotCommand("metadata", "View metadata"),
-        BotCommand("ping", "Check bot ping"),
+        BotCommand("start_sequence", "Start sequence"),
+        BotCommand("end_sequence", "End sequence"),
+        BotCommand("metadata", "Show metadata"),
+        BotCommand("ping", "Check bot status"),
         BotCommand("donate", "Support developer"),
         BotCommand("set_prefix", "Set prefix"),
         BotCommand("see_prefix", "View prefix"),
@@ -71,47 +72,34 @@ async def set_commands():
         BotCommand("see_suffix", "View suffix"),
         BotCommand("del_suffix", "Delete suffix"),
     ]
-    
-    try:
-        await app.set_bot_commands(commands)
-        logger.info("Bot commands set successfully")
-    except Exception as e:
-        logger.error(f"Error setting commands: {e}")
+
+    await app.set_bot_commands(commands)
+    logger.info("✅ Bot commands set")
 
 async def main():
-    """Start the bot"""
     try:
-        logger.info("Starting bot...")
+        logger.info("🚀 Starting bot...")
         await app.start()
-        logger.info("Bot client started successfully")
-        
-        # Set commands
+
         await set_commands()
-        
-        # Get bot info
+
         me = await app.get_me()
-        logger.info(f"Bot is live: {me.first_name} (@{me.username}) - ID: {me.id}")
+        logger.info(f"🤖 Bot started as {me.first_name} (@{me.username})")
+        logger.info("✅ BOT IS LIVE AND RUNNING")
         logger.info("=" * 60)
-        logger.info("BOT IS RUNNING AND READY FOR COMMANDS")
-        logger.info("=" * 60)
-        
-        # Idle to keep bot running
+
         await idle()
+
     except Exception as e:
-        logger.error(f"Critical error: {e}", exc_info=True)
+        logger.error("🔥 Fatal error occurred", exc_info=True)
         sys.exit(1)
+
     finally:
-        try:
-            await app.stop()
-            logger.info("Bot stopped gracefully")
-        except Exception as e:
-            logger.error(f"Error during shutdown: {e}")
+        await app.stop()
+        logger.info("🛑 Bot stopped gracefully")
 
 if __name__ == "__main__":
     try:
         asyncio.run(main())
     except KeyboardInterrupt:
-        logger.info("Bot interrupted by user")
-    except Exception as e:
-        logger.error(f"Unhandled exception: {e}", exc_info=True)
-        sys.exit(1)
+        logger.info("👋 Bot stopped by user")
