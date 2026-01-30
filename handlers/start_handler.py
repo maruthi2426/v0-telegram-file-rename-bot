@@ -1,5 +1,5 @@
 import logging
-from pyrogram import Client, filters
+from pyrogram import filters
 from pyrogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton
 from config import START_MESSAGE, HELP_MESSAGE
 from database import db
@@ -7,7 +7,10 @@ from utils import send_log, is_admin, check_user_ban
 
 logger = logging.getLogger(__name__)
 
-@Client.on_message(filters.command("start"))
+# Import app from main to register handlers
+from main import app
+
+@app.on_message(filters.command("start"))
 async def start_command(app: Client, message: Message):
     """Handle /start command"""
     try:
@@ -45,8 +48,8 @@ async def start_command(app: Client, message: Message):
         logger.error(f"Error in start_command: {e}")
         await message.reply_text("❌ An error occurred. Please try again.")
 
-@Client.on_message(filters.command("help"))
-async def help_command(app: Client, message: Message):
+@app.on_message(filters.command("help"))
+async def help_command(app: Message):
     """Handle /help command"""
     try:
         keyboard = InlineKeyboardMarkup([
@@ -61,16 +64,16 @@ async def help_command(app: Client, message: Message):
     except Exception as e:
         logger.error(f"Error in help_command: {e}")
 
-@Client.on_message(filters.command("ping"))
-async def ping_command(app: Client, message: Message):
+@app.on_message(filters.command("ping"))
+async def ping_command(app: Message):
     """Handle /ping command"""
     try:
         await message.reply_text("🏓 Pong! Bot is running smoothly!")
     except Exception as e:
         logger.error(f"Error in ping_command: {e}")
 
-@Client.on_message(filters.command("donate"))
-async def donate_command(app: Client, message: Message):
+@app.on_message(filters.command("donate"))
+async def donate_command(app: Message):
     """Handle /donate command"""
     try:
         donate_text = """
@@ -93,8 +96,8 @@ Thank you for your support! 🙏
         logger.error(f"Error in donate_command: {e}")
 
 # Callback handlers for inline buttons
-@Client.on_callback_query(filters.regex("^help$"))
-async def help_callback(app: Client, query):
+@app.on_callback_query(filters.regex("^help$"))
+async def help_callback(app, query):
     """Handle help button callback"""
     try:
         keyboard = InlineKeyboardMarkup([
@@ -109,8 +112,8 @@ async def help_callback(app: Client, query):
     except Exception as e:
         logger.error(f"Error in help_callback: {e}")
 
-@Client.on_callback_query(filters.regex("^tutorial$"))
-async def tutorial_callback(app: Client, query):
+@app.on_callback_query(filters.regex("^tutorial$"))
+async def tutorial_callback(app, query):
     """Handle tutorial button callback"""
     try:
         tutorial_text = """
@@ -151,8 +154,8 @@ Download the renamed file from the bot.
     except Exception as e:
         logger.error(f"Error in tutorial_callback: {e}")
 
-@Client.on_callback_query(filters.regex("^back_home$"))
-async def back_home_callback(app: Client, query):
+@app.on_callback_query(filters.regex("^back_home$"))
+async def back_home_callback(app, query):
     """Handle back to home button callback"""
     try:
         keyboard = InlineKeyboardMarkup([
@@ -174,8 +177,8 @@ async def back_home_callback(app: Client, query):
     except Exception as e:
         logger.error(f"Error in back_home_callback: {e}")
 
-@Client.on_callback_query(filters.regex("^about$"))
-async def about_callback(app: Client, query):
+@app.on_callback_query(filters.regex("^about$"))
+async def about_callback(app, query):
     """Handle about button callback"""
     try:
         about_text = """

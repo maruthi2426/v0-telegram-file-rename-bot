@@ -1,21 +1,22 @@
 import logging
 import os
 import asyncio
-from pyrogram import Client, filters
+from pyrogram import filters
 from pyrogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton
 from database import db
 from utils import (
     parse_rename_format, sanitize_filename, get_file_extension,
     send_log, check_user_ban
 )
+from main import app
 
 logger = logging.getLogger(__name__)
 
 # Store rename formats in memory temporarily
 rename_formats = {}
 
-@Client.on_message(filters.command("autorename"))
-async def autorename_command(app: Client, message: Message):
+@app.on_message(filters.command("autorename"))
+async def autorename_command(client, message: Message):
     """Handle /autorename command - Set custom rename format"""
     try:
         user_id = message.from_user.id
@@ -53,8 +54,8 @@ Send your desired format as a message.
         logger.error(f"Error in autorename_command: {e}")
         await message.reply_text("❌ Error occurred!")
 
-@Client.on_message(filters.command("showformat"))
-async def showformat_command(app: Client, message: Message):
+@app.on_message(filters.command("showformat"))
+async def showformat_command(client, message: Message):
     """Handle /showformat command - Show current rename format"""
     try:
         user_id = message.from_user.id
@@ -79,8 +80,8 @@ async def showformat_command(app: Client, message: Message):
     except Exception as e:
         logger.error(f"Error in showformat_command: {e}")
 
-@Client.on_message(filters.command("setmedia"))
-async def setmedia_command(app: Client, message: Message):
+@app.on_message(filters.command("setmedia"))
+async def setmedia_command(client, message: Message):
     """Handle /setmedia command - Set output file type"""
     try:
         user_id = message.from_user.id
@@ -108,8 +109,8 @@ async def setmedia_command(app: Client, message: Message):
     except Exception as e:
         logger.error(f"Error in setmedia_command: {e}")
 
-@Client.on_message(filters.command("start_sequence"))
-async def start_sequence_command(app: Client, message: Message):
+@app.on_message(filters.command("start_sequence"))
+async def start_sequence_command(client, message: Message):
     """Handle /start_sequence command"""
     try:
         user_id = message.from_user.id
@@ -128,8 +129,8 @@ async def start_sequence_command(app: Client, message: Message):
     except Exception as e:
         logger.error(f"Error in start_sequence_command: {e}")
 
-@Client.on_message(filters.command("end_sequence"))
-async def end_sequence_command(app: Client, message: Message):
+@app.on_message(filters.command("end_sequence"))
+async def end_sequence_command(client, message: Message):
     """Handle /end_sequence command"""
     try:
         user_id = message.from_user.id
@@ -151,8 +152,8 @@ async def end_sequence_command(app: Client, message: Message):
         logger.error(f"Error in end_sequence_command: {e}")
 
 # Handle file rename when user sends file
-@Client.on_message(filters.document | filters.video)
-async def handle_file_rename(app: Client, message: Message):
+@app.on_message(filters.document | filters.video)
+async def handle_file_rename(client, message: Message):
     """Handle file rename when user sends a file"""
     try:
         user_id = message.from_user.id
@@ -218,8 +219,8 @@ async def handle_file_rename(app: Client, message: Message):
         await message.reply_text(f"❌ Error processing file: {str(e)}")
 
 # Callback handlers
-@Client.on_callback_query(filters.regex("^cancel_format$"))
-async def cancel_format_callback(app: Client, query):
+@app.on_callback_query(filters.regex("^cancel_format$"))
+async def cancel_format_callback(client, query):
     """Handle cancel format button"""
     try:
         user_id = query.from_user.id
@@ -230,8 +231,8 @@ async def cancel_format_callback(app: Client, query):
     except Exception as e:
         logger.error(f"Error in cancel_format_callback: {e}")
 
-@Client.on_callback_query(filters.regex("^media_"))
-async def media_callback(app: Client, query):
+@app.on_callback_query(filters.regex("^media_"))
+async def media_callback(client, query):
     """Handle media format selection"""
     try:
         format_type = query.data.replace("media_", "")
