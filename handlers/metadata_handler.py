@@ -50,7 +50,7 @@ async def metadata_command(client, message: Message):
         logger.error(f"Error in metadata_command: {e}")
 
 @app.on_message(filters.command("set_prefix"))
-async def set_prefix_command(app: Client, message: Message):
+async def set_prefix_command(client, message: Message):
     """Handle /set_prefix command"""
     try:
         user_id = message.from_user.id
@@ -81,7 +81,7 @@ Send your prefix:
         logger.error(f"Error in set_prefix_command: {e}")
 
 @app.on_message(filters.command("see_prefix"))
-async def see_prefix_command(app: Client, message: Message):
+async def see_prefix_command(client, message: Message):
     """Handle /see_prefix command"""
     try:
         user_id = message.from_user.id
@@ -108,7 +108,7 @@ async def see_prefix_command(app: Client, message: Message):
         logger.error(f"Error in see_prefix_command: {e}")
 
 @app.on_message(filters.command("del_prefix"))
-async def del_prefix_command(app: Client, message: Message):
+async def del_prefix_command(client, message: Message):
     """Handle /del_prefix command"""
     try:
         user_id = message.from_user.id
@@ -125,7 +125,7 @@ async def del_prefix_command(app: Client, message: Message):
         logger.error(f"Error in del_prefix_command: {e}")
 
 @app.on_message(filters.command("set_suffix"))
-async def set_suffix_command(app: Client, message: Message):
+async def set_suffix_command(client, message: Message):
     """Handle /set_suffix command"""
     try:
         user_id = message.from_user.id
@@ -156,7 +156,7 @@ Send your suffix:
         logger.error(f"Error in set_suffix_command: {e}")
 
 @app.on_message(filters.command("see_suffix"))
-async def see_suffix_command(app: Client, message: Message):
+async def see_suffix_command(client, message: Message):
     """Handle /see_suffix command"""
     try:
         user_id = message.from_user.id
@@ -183,7 +183,7 @@ async def see_suffix_command(app: Client, message: Message):
         logger.error(f"Error in see_suffix_command: {e}")
 
 @app.on_message(filters.command("del_suffix"))
-async def del_suffix_command(app: Client, message: Message):
+async def del_suffix_command(client, message: Message):
     """Handle /del_suffix command"""
     try:
         user_id = message.from_user.id
@@ -201,7 +201,7 @@ async def del_suffix_command(app: Client, message: Message):
 
 # Handle text input for metadata
 @app.on_message(filters.text & filters.private, group=3)
-async def handle_metadata_input(app: Client, message: Message):
+async def handle_metadata_input(client, message: Message):
     """Handle metadata text input"""
     try:
         user_id = message.from_user.id
@@ -242,7 +242,7 @@ async def handle_metadata_input(app: Client, message: Message):
 
 # Callback handlers
 @app.on_callback_query(filters.regex("^(cancel_|change_|del_|add_|clear_)(prefix|suffix|title|author|metadata)$"))
-async def metadata_callback_handler(app: Client, query):
+async def metadata_callback_handler(client, query):
     """Handle all metadata-related callbacks"""
     try:
         user_id = query.from_user.id
