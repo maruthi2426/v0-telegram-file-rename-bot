@@ -1,17 +1,18 @@
 import logging
-from pyrogram import Client, filters
+from pyrogram import filters
 from pyrogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton
 from database import db
 from utils import send_log, is_admin, check_user_ban, create_status_text
 from config import OWNER_ID
+from main import app
 
 logger = logging.getLogger(__name__)
 
 # Store admin states
 admin_states = {}
 
-@Client.on_message(filters.command("add_admin"))
-async def add_admin_command(app: Client, message: Message):
+@app.on_message(filters.command("add_admin"))
+async def add_admin_command(client, message: Message):
     """Handle /add_admin command"""
     try:
         user_id = message.from_user.id
@@ -37,7 +38,7 @@ Send the user ID:
     except Exception as e:
         logger.error(f"Error in add_admin_command: {e}")
 
-@Client.on_message(filters.command("deladmin"))
+@app.on_message(filters.command("deladmin"))
 async def deladmin_command(app: Client, message: Message):
     """Handle /deladmin command"""
     try:
@@ -64,7 +65,7 @@ Send the user ID:
     except Exception as e:
         logger.error(f"Error in deladmin_command: {e}")
 
-@Client.on_message(filters.command("admins"))
+@app.on_message(filters.command("admins"))
 async def admins_command(app: Client, message: Message):
     """Handle /admins command - List all admins"""
     try:
@@ -92,7 +93,7 @@ async def admins_command(app: Client, message: Message):
     except Exception as e:
         logger.error(f"Error in admins_command: {e}")
 
-@Client.on_message(filters.command("ban"))
+@app.on_message(filters.command("ban"))
 async def ban_command(app: Client, message: Message):
     """Handle /ban command"""
     try:
@@ -119,7 +120,7 @@ Send the user ID:
     except Exception as e:
         logger.error(f"Error in ban_command: {e}")
 
-@Client.on_message(filters.command("unban"))
+@app.on_message(filters.command("unban"))
 async def unban_command(app: Client, message: Message):
     """Handle /unban command"""
     try:
@@ -146,7 +147,7 @@ Send the user ID:
     except Exception as e:
         logger.error(f"Error in unban_command: {e}")
 
-@Client.on_message(filters.command("banned"))
+@app.on_message(filters.command("banned"))
 async def banned_command(app: Client, message: Message):
     """Handle /banned command - List banned users"""
     try:
@@ -173,7 +174,7 @@ async def banned_command(app: Client, message: Message):
     except Exception as e:
         logger.error(f"Error in banned_command: {e}")
 
-@Client.on_message(filters.command("addchnl"))
+@app.on_message(filters.command("addchnl"))
 async def addchnl_command(app: Client, message: Message):
     """Handle /addchnl command - Add force subscribe channel"""
     try:
@@ -200,7 +201,7 @@ Send the username:
     except Exception as e:
         logger.error(f"Error in addchnl_command: {e}")
 
-@Client.on_message(filters.command("delchnl"))
+@app.on_message(filters.command("delchnl"))
 async def delchnl_command(app: Client, message: Message):
     """Handle /delchnl command - Remove force subscribe channel"""
     try:
@@ -229,7 +230,7 @@ async def delchnl_command(app: Client, message: Message):
     except Exception as e:
         logger.error(f"Error in delchnl_command: {e}")
 
-@Client.on_message(filters.command("listchnl"))
+@app.on_message(filters.command("listchnl"))
 async def listchnl_command(app: Client, message: Message):
     """Handle /listchnl command - List all force subscribe channels"""
     try:
@@ -255,7 +256,7 @@ async def listchnl_command(app: Client, message: Message):
     except Exception as e:
         logger.error(f"Error in listchnl_command: {e}")
 
-@Client.on_message(filters.command("broadcast"))
+@app.on_message(filters.command("broadcast"))
 async def broadcast_command(app: Client, message: Message):
     """Handle /broadcast command - Broadcast message to all users"""
     try:
@@ -280,7 +281,7 @@ Send your message:
     except Exception as e:
         logger.error(f"Error in broadcast_command: {e}")
 
-@Client.on_message(filters.command("restart"))
+@app.on_message(filters.command("restart"))
 async def restart_command(app: Client, message: Message):
     """Handle /restart command - Restart bot"""
     try:
@@ -302,7 +303,7 @@ async def restart_command(app: Client, message: Message):
         logger.error(f"Error in restart_command: {e}")
 
 # Handle text input for admin actions
-@Client.on_message(filters.text & filters.private, group=5)
+@app.on_message(filters.text & filters.private, group=5)
 async def handle_admin_input(app: Client, message: Message):
     """Handle admin action text input"""
     try:
@@ -385,7 +386,7 @@ async def handle_admin_input(app: Client, message: Message):
         logger.error(f"Error in handle_admin_input: {e}")
 
 # Callback handler for removing channel
-@Client.on_callback_query(filters.regex("^remove_chnl_"))
+@app.on_callback_query(filters.regex("^remove_chnl_"))
 async def remove_channel_callback(app: Client, query):
     """Handle remove channel callback"""
     try:
