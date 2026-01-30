@@ -1,16 +1,17 @@
 import logging
-from pyrogram import Client, filters
+from pyrogram import filters
 from pyrogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton
 from database import db
 from utils import send_log, check_user_ban
+from main import app
 
 logger = logging.getLogger(__name__)
 
 # Store metadata states
 metadata_states = {}
 
-@Client.on_message(filters.command("metadata"))
-async def metadata_command(app: Client, message: Message):
+@app.on_message(filters.command("metadata"))
+async def metadata_command(client, message: Message):
     """Handle /metadata command"""
     try:
         user_id = message.from_user.id
@@ -48,7 +49,7 @@ async def metadata_command(app: Client, message: Message):
     except Exception as e:
         logger.error(f"Error in metadata_command: {e}")
 
-@Client.on_message(filters.command("set_prefix"))
+@app.on_message(filters.command("set_prefix"))
 async def set_prefix_command(app: Client, message: Message):
     """Handle /set_prefix command"""
     try:
@@ -79,7 +80,7 @@ Send your prefix:
     except Exception as e:
         logger.error(f"Error in set_prefix_command: {e}")
 
-@Client.on_message(filters.command("see_prefix"))
+@app.on_message(filters.command("see_prefix"))
 async def see_prefix_command(app: Client, message: Message):
     """Handle /see_prefix command"""
     try:
@@ -106,7 +107,7 @@ async def see_prefix_command(app: Client, message: Message):
     except Exception as e:
         logger.error(f"Error in see_prefix_command: {e}")
 
-@Client.on_message(filters.command("del_prefix"))
+@app.on_message(filters.command("del_prefix"))
 async def del_prefix_command(app: Client, message: Message):
     """Handle /del_prefix command"""
     try:
@@ -123,7 +124,7 @@ async def del_prefix_command(app: Client, message: Message):
     except Exception as e:
         logger.error(f"Error in del_prefix_command: {e}")
 
-@Client.on_message(filters.command("set_suffix"))
+@app.on_message(filters.command("set_suffix"))
 async def set_suffix_command(app: Client, message: Message):
     """Handle /set_suffix command"""
     try:
@@ -154,7 +155,7 @@ Send your suffix:
     except Exception as e:
         logger.error(f"Error in set_suffix_command: {e}")
 
-@Client.on_message(filters.command("see_suffix"))
+@app.on_message(filters.command("see_suffix"))
 async def see_suffix_command(app: Client, message: Message):
     """Handle /see_suffix command"""
     try:
@@ -181,7 +182,7 @@ async def see_suffix_command(app: Client, message: Message):
     except Exception as e:
         logger.error(f"Error in see_suffix_command: {e}")
 
-@Client.on_message(filters.command("del_suffix"))
+@app.on_message(filters.command("del_suffix"))
 async def del_suffix_command(app: Client, message: Message):
     """Handle /del_suffix command"""
     try:
@@ -199,7 +200,7 @@ async def del_suffix_command(app: Client, message: Message):
         logger.error(f"Error in del_suffix_command: {e}")
 
 # Handle text input for metadata
-@Client.on_message(filters.text & filters.private, group=3)
+@app.on_message(filters.text & filters.private, group=3)
 async def handle_metadata_input(app: Client, message: Message):
     """Handle metadata text input"""
     try:
@@ -240,7 +241,7 @@ async def handle_metadata_input(app: Client, message: Message):
         logger.error(f"Error in handle_metadata_input: {e}")
 
 # Callback handlers
-@Client.on_callback_query(filters.regex("^(cancel_|change_|del_|add_|clear_)(prefix|suffix|title|author|metadata)$"))
+@app.on_callback_query(filters.regex("^(cancel_|change_|del_|add_|clear_)(prefix|suffix|title|author|metadata)$"))
 async def metadata_callback_handler(app: Client, query):
     """Handle all metadata-related callbacks"""
     try:
