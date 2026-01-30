@@ -1,16 +1,17 @@
 import logging
-from pyrogram import Client, filters
+from pyrogram import filters
 from pyrogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton
 from database import db
 from utils import send_log, check_user_ban, split_text
+from main import app
 
 logger = logging.getLogger(__name__)
 
 # Store caption states
 caption_states = {}
 
-@Client.on_message(filters.command("set_caption"))
-async def set_caption_command(app: Client, message: Message):
+@app.on_message(filters.command("set_caption"))
+async def set_caption_command(client, message: Message):
     """Handle /set_caption command"""
     try:
         user_id = message.from_user.id
@@ -43,7 +44,7 @@ Send your caption now:
     except Exception as e:
         logger.error(f"Error in set_caption_command: {e}")
 
-@Client.on_message(filters.command("see_caption"))
+@app.on_message(filters.command("see_caption"))
 async def see_caption_command(app: Client, message: Message):
     """Handle /see_caption command"""
     try:
@@ -76,7 +77,7 @@ async def see_caption_command(app: Client, message: Message):
     except Exception as e:
         logger.error(f"Error in see_caption_command: {e}")
 
-@Client.on_message(filters.command("del_caption"))
+@app.on_message(filters.command("del_caption"))
 async def del_caption_command(app: Client, message: Message):
     """Handle /del_caption command"""
     try:
@@ -99,7 +100,7 @@ async def del_caption_command(app: Client, message: Message):
         logger.error(f"Error in del_caption_command: {e}")
 
 # Handle text input for caption
-@Client.on_message(filters.text & filters.private, group=2)
+@app.on_message(filters.text & filters.private, group=2)
 async def handle_caption_input(app: Client, message: Message):
     """Handle caption text input"""
     try:
@@ -131,7 +132,7 @@ async def handle_caption_input(app: Client, message: Message):
         logger.error(f"Error in handle_caption_input: {e}")
 
 # Callback handlers
-@Client.on_callback_query(filters.regex("^cancel_caption$"))
+@app.on_callback_query(filters.regex("^cancel_caption$"))
 async def cancel_caption_callback(app: Client, query):
     """Handle cancel caption button"""
     try:
@@ -143,7 +144,7 @@ async def cancel_caption_callback(app: Client, query):
     except Exception as e:
         logger.error(f"Error in cancel_caption_callback: {e}")
 
-@Client.on_callback_query(filters.regex("^change_caption$"))
+@app.on_callback_query(filters.regex("^change_caption$"))
 async def change_caption_callback(app: Client, query):
     """Handle change caption button"""
     try:
@@ -161,7 +162,7 @@ async def change_caption_callback(app: Client, query):
     except Exception as e:
         logger.error(f"Error in change_caption_callback: {e}")
 
-@Client.on_callback_query(filters.regex("^add_caption$"))
+@app.on_callback_query(filters.regex("^add_caption$"))
 async def add_caption_callback(app: Client, query):
     """Handle add caption button"""
     try:
@@ -179,7 +180,7 @@ async def add_caption_callback(app: Client, query):
     except Exception as e:
         logger.error(f"Error in add_caption_callback: {e}")
 
-@Client.on_callback_query(filters.regex("^del_caption$"))
+@app.on_callback_query(filters.regex("^del_caption$"))
 async def del_caption_callback(app: Client, query):
     """Handle delete caption button"""
     try:
