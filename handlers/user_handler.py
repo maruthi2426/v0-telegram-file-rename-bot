@@ -47,7 +47,7 @@ async def leaderboard_command(client, message: Message):
         logger.error(f"Error in leaderboard_command: {e}")
 
 @app.on_message(filters.command("tutorial"))
-async def tutorial_command(app: Client, message: Message):
+async def tutorial_command(client, message: Message):
     """Handle /tutorial command"""
     try:
         user_id = message.from_user.id
@@ -113,7 +113,7 @@ Need help? Contact the developer!
         logger.error(f"Error in tutorial_command: {e}")
 
 @app.on_callback_query(filters.regex("^refresh_leaderboard$"))
-async def refresh_leaderboard_callback(app: Client, query):
+async def refresh_leaderboard_callback(client, query):
     """Handle refresh leaderboard button"""
     try:
         user_id = query.from_user.id
@@ -147,7 +147,7 @@ async def refresh_leaderboard_callback(app: Client, query):
         logger.error(f"Error in refresh_leaderboard_callback: {e}")
 
 @app.on_callback_query(filters.regex("^leaderboard$"))
-async def leaderboard_callback(app: Client, query):
+async def leaderboard_callback(client, query):
     """Handle leaderboard button callback"""
     try:
         user_id = query.from_user.id
@@ -182,7 +182,7 @@ async def leaderboard_callback(app: Client, query):
         logger.error(f"Error in leaderboard_callback: {e}")
 
 @app.on_message(filters.command("status"))
-async def status_command(app: Client, message: Message):
+async def status_command(client, message: Message):
     """Handle /status command - Bot status"""
     try:
         user_id = message.from_user.id

@@ -39,7 +39,7 @@ Send the user ID:
         logger.error(f"Error in add_admin_command: {e}")
 
 @app.on_message(filters.command("deladmin"))
-async def deladmin_command(app: Client, message: Message):
+async def deladmin_command(client, message: Message):
     """Handle /deladmin command"""
     try:
         user_id = message.from_user.id
@@ -66,7 +66,7 @@ Send the user ID:
         logger.error(f"Error in deladmin_command: {e}")
 
 @app.on_message(filters.command("admins"))
-async def admins_command(app: Client, message: Message):
+async def admins_command(client, message: Message):
     """Handle /admins command - List all admins"""
     try:
         user_id = message.from_user.id
@@ -94,7 +94,7 @@ async def admins_command(app: Client, message: Message):
         logger.error(f"Error in admins_command: {e}")
 
 @app.on_message(filters.command("ban"))
-async def ban_command(app: Client, message: Message):
+async def ban_command(client, message: Message):
     """Handle /ban command"""
     try:
         user_id = message.from_user.id
@@ -121,7 +121,7 @@ Send the user ID:
         logger.error(f"Error in ban_command: {e}")
 
 @app.on_message(filters.command("unban"))
-async def unban_command(app: Client, message: Message):
+async def unban_command(client, message: Message):
     """Handle /unban command"""
     try:
         user_id = message.from_user.id
@@ -148,7 +148,7 @@ Send the user ID:
         logger.error(f"Error in unban_command: {e}")
 
 @app.on_message(filters.command("banned"))
-async def banned_command(app: Client, message: Message):
+async def banned_command(client, message: Message):
     """Handle /banned command - List banned users"""
     try:
         user_id = message.from_user.id
@@ -175,7 +175,7 @@ async def banned_command(app: Client, message: Message):
         logger.error(f"Error in banned_command: {e}")
 
 @app.on_message(filters.command("addchnl"))
-async def addchnl_command(app: Client, message: Message):
+async def addchnl_command(client, message: Message):
     """Handle /addchnl command - Add force subscribe channel"""
     try:
         user_id = message.from_user.id
@@ -202,7 +202,7 @@ Send the username:
         logger.error(f"Error in addchnl_command: {e}")
 
 @app.on_message(filters.command("delchnl"))
-async def delchnl_command(app: Client, message: Message):
+async def delchnl_command(client, message: Message):
     """Handle /delchnl command - Remove force subscribe channel"""
     try:
         user_id = message.from_user.id
@@ -231,7 +231,7 @@ async def delchnl_command(app: Client, message: Message):
         logger.error(f"Error in delchnl_command: {e}")
 
 @app.on_message(filters.command("listchnl"))
-async def listchnl_command(app: Client, message: Message):
+async def listchnl_command(client, message: Message):
     """Handle /listchnl command - List all force subscribe channels"""
     try:
         user_id = message.from_user.id
@@ -257,7 +257,7 @@ async def listchnl_command(app: Client, message: Message):
         logger.error(f"Error in listchnl_command: {e}")
 
 @app.on_message(filters.command("broadcast"))
-async def broadcast_command(app: Client, message: Message):
+async def broadcast_command(client, message: Message):
     """Handle /broadcast command - Broadcast message to all users"""
     try:
         user_id = message.from_user.id
@@ -282,7 +282,7 @@ Send your message:
         logger.error(f"Error in broadcast_command: {e}")
 
 @app.on_message(filters.command("restart"))
-async def restart_command(app: Client, message: Message):
+async def restart_command(client, message: Message):
     """Handle /restart command - Restart bot"""
     try:
         user_id = message.from_user.id
@@ -304,7 +304,7 @@ async def restart_command(app: Client, message: Message):
 
 # Handle text input for admin actions
 @app.on_message(filters.text & filters.private, group=5)
-async def handle_admin_input(app: Client, message: Message):
+async def handle_admin_input(client, message: Message):
     """Handle admin action text input"""
     try:
         user_id = message.from_user.id
@@ -387,7 +387,7 @@ async def handle_admin_input(app: Client, message: Message):
 
 # Callback handler for removing channel
 @app.on_callback_query(filters.regex("^remove_chnl_"))
-async def remove_channel_callback(app: Client, query):
+async def remove_channel_callback(client, query):
     """Handle remove channel callback"""
     try:
         user_id = query.from_user.id

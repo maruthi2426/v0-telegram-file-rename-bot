@@ -11,7 +11,7 @@ logger = logging.getLogger(__name__)
 from main import app
 
 @app.on_message(filters.command("start"))
-async def start_command(app: Client, message: Message):
+async def start_command(client, message: Message):
     """Handle /start command"""
     try:
         user_id = message.from_user.id
