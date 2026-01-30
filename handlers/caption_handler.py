@@ -45,7 +45,7 @@ Send your caption now:
         logger.error(f"Error in set_caption_command: {e}")
 
 @app.on_message(filters.command("see_caption"))
-async def see_caption_command(app: Client, message: Message):
+async def see_caption_command(client, message: Message):
     """Handle /see_caption command"""
     try:
         user_id = message.from_user.id
@@ -78,7 +78,7 @@ async def see_caption_command(app: Client, message: Message):
         logger.error(f"Error in see_caption_command: {e}")
 
 @app.on_message(filters.command("del_caption"))
-async def del_caption_command(app: Client, message: Message):
+async def del_caption_command(client, message: Message):
     """Handle /del_caption command"""
     try:
         user_id = message.from_user.id
@@ -101,7 +101,7 @@ async def del_caption_command(app: Client, message: Message):
 
 # Handle text input for caption
 @app.on_message(filters.text & filters.private, group=2)
-async def handle_caption_input(app: Client, message: Message):
+async def handle_caption_input(client, message: Message):
     """Handle caption text input"""
     try:
         user_id = message.from_user.id
@@ -133,7 +133,7 @@ async def handle_caption_input(app: Client, message: Message):
 
 # Callback handlers
 @app.on_callback_query(filters.regex("^cancel_caption$"))
-async def cancel_caption_callback(app: Client, query):
+async def cancel_caption_callback(client, query):
     """Handle cancel caption button"""
     try:
         user_id = query.from_user.id
@@ -145,7 +145,7 @@ async def cancel_caption_callback(app: Client, query):
         logger.error(f"Error in cancel_caption_callback: {e}")
 
 @app.on_callback_query(filters.regex("^change_caption$"))
-async def change_caption_callback(app: Client, query):
+async def change_caption_callback(client, query):
     """Handle change caption button"""
     try:
         user_id = query.from_user.id
@@ -163,7 +163,7 @@ async def change_caption_callback(app: Client, query):
         logger.error(f"Error in change_caption_callback: {e}")
 
 @app.on_callback_query(filters.regex("^add_caption$"))
-async def add_caption_callback(app: Client, query):
+async def add_caption_callback(client, query):
     """Handle add caption button"""
     try:
         user_id = query.from_user.id
@@ -181,7 +181,7 @@ async def add_caption_callback(app: Client, query):
         logger.error(f"Error in add_caption_callback: {e}")
 
 @app.on_callback_query(filters.regex("^del_caption$"))
-async def del_caption_callback(app: Client, query):
+async def del_caption_callback(client, query):
     """Handle delete caption button"""
     try:
         user_id = query.from_user.id
