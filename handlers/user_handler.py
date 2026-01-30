@@ -1,13 +1,14 @@
 import logging
-from pyrogram import Client, filters
+from pyrogram import filters
 from pyrogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton
 from database import db
 from utils import send_log, check_user_ban, create_leaderboard_text
+from main import app
 
 logger = logging.getLogger(__name__)
 
-@Client.on_message(filters.command("leaderboard"))
-async def leaderboard_command(app: Client, message: Message):
+@app.on_message(filters.command("leaderboard"))
+async def leaderboard_command(client, message: Message):
     """Handle /leaderboard command"""
     try:
         user_id = message.from_user.id
@@ -45,7 +46,7 @@ async def leaderboard_command(app: Client, message: Message):
     except Exception as e:
         logger.error(f"Error in leaderboard_command: {e}")
 
-@Client.on_message(filters.command("tutorial"))
+@app.on_message(filters.command("tutorial"))
 async def tutorial_command(app: Client, message: Message):
     """Handle /tutorial command"""
     try:
@@ -111,7 +112,7 @@ Need help? Contact the developer!
     except Exception as e:
         logger.error(f"Error in tutorial_command: {e}")
 
-@Client.on_callback_query(filters.regex("^refresh_leaderboard$"))
+@app.on_callback_query(filters.regex("^refresh_leaderboard$"))
 async def refresh_leaderboard_callback(app: Client, query):
     """Handle refresh leaderboard button"""
     try:
@@ -145,7 +146,7 @@ async def refresh_leaderboard_callback(app: Client, query):
     except Exception as e:
         logger.error(f"Error in refresh_leaderboard_callback: {e}")
 
-@Client.on_callback_query(filters.regex("^leaderboard$"))
+@app.on_callback_query(filters.regex("^leaderboard$"))
 async def leaderboard_callback(app: Client, query):
     """Handle leaderboard button callback"""
     try:
@@ -180,7 +181,7 @@ async def leaderboard_callback(app: Client, query):
     except Exception as e:
         logger.error(f"Error in leaderboard_callback: {e}")
 
-@Client.on_message(filters.command("status"))
+@app.on_message(filters.command("status"))
 async def status_command(app: Client, message: Message):
     """Handle /status command - Bot status"""
     try:
