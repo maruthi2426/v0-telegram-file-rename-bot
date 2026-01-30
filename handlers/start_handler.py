@@ -49,7 +49,7 @@ async def start_command(client, message: Message):
         await message.reply_text("❌ An error occurred. Please try again.")
 
 @app.on_message(filters.command("help"))
-async def help_command(app: Message):
+async def help_command(client, message: Message):
     """Handle /help command"""
     try:
         keyboard = InlineKeyboardMarkup([
@@ -65,7 +65,7 @@ async def help_command(app: Message):
         logger.error(f"Error in help_command: {e}")
 
 @app.on_message(filters.command("ping"))
-async def ping_command(app: Message):
+async def ping_command(client, message: Message):
     """Handle /ping command"""
     try:
         await message.reply_text("🏓 Pong! Bot is running smoothly!")
@@ -73,7 +73,7 @@ async def ping_command(app: Message):
         logger.error(f"Error in ping_command: {e}")
 
 @app.on_message(filters.command("donate"))
-async def donate_command(app: Message):
+async def donate_command(client, message: Message):
     """Handle /donate command"""
     try:
         donate_text = """
